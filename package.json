@@ -1,0 +1,11 @@
+{
+  "name": "figurewise",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "FigureWise — free personal finance calculators. Static site generator.",
+  "scripts": {
+    "build": "node build.js",
+    "serve": "node serve.js"
+  }
+}
