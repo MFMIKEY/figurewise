@@ -66,6 +66,11 @@ export const site = {
   // traffic tracking. Leave empty to disable.
   ga4: "",
 
+  // Show a small cookie/consent notice at the bottom (recommended for AdSense
+  // and good practice). Once you enable Google's own consent messaging in the
+  // AdSense dashboard (for EEA/UK visitors), you can set this to false.
+  cookieNotice: true,
+
   // --- Contact ---------------------------------------------------------------
   contactEmail: "hello@figurewise.com",
 };

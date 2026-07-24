@@ -38,7 +38,8 @@ function head({ title, description, path, jsonld }) {
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${esc(site.ga4)}');</script>`
     : "";
   const adsense = site.adsenseClient
-    ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(
+    ? `<meta name="google-adsense-account" content="${esc(site.adsenseClient)}">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(
         site.adsenseClient
       )}" crossorigin="anonymous"></script>`
     : "";
@@ -143,6 +144,15 @@ export function affiliateCard(groupKey) {
 </aside>`;
 }
 
+function cookieNotice() {
+  if (!site.cookieNotice) return "";
+  return `<div id="cookie-notice" class="cookie-notice" hidden>
+<p>We use cookies for analytics and to serve ads that keep FigureWise free. By using this site you agree to our <a href="${BASE}/privacy/">Privacy Policy</a>.</p>
+<button type="button" id="cookie-ok" class="btn">Got it</button>
+</div>
+<script>(function(){try{var k="fw_cookie_ok";if(!localStorage.getItem(k)){var n=document.getElementById("cookie-notice");if(!n)return;n.hidden=false;var b=document.getElementById("cookie-ok");b&&b.addEventListener("click",function(){try{localStorage.setItem(k,"1")}catch(e){}n.hidden=true;});}}catch(e){}})();</script>`;
+}
+
 function shell({ title, description, path, jsonld, bodyClass, main }) {
   return `${head({ title, description, path, jsonld })}
 <body${bodyClass ? ` class="${bodyClass}"` : ""}>
@@ -151,6 +161,7 @@ ${header()}
 ${main}
 </main>
 ${footer()}
+${cookieNotice()}
 </body>
 </html>`;
 }

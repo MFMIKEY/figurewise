@@ -204,6 +204,12 @@ table.sched tbody tr:nth-child(even) { background: color-mix(in srgb, var(--surf
 .footer-bottom { border-top: 1px solid var(--border); text-align: center; padding: 18px; font-size: .84rem; color: var(--text-mute); }
 .footer-bottom p { margin: 4px 0; color: var(--text-mute); }
 
+/* cookie notice */
+.cookie-notice { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 200; max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 14px 18px; }
+.cookie-notice p { margin: 0; flex: 1 1 260px; font-size: .9rem; color: var(--text-soft); }
+.cookie-notice .btn { padding: 9px 20px; font-size: .92rem; }
+.cookie-notice[hidden] { display: none; }
+
 /* skip link a11y */
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 12px; top: 12px; background: var(--surface); padding: 8px 14px; border-radius: 8px; z-index: 100; border: 1px solid var(--border); }
