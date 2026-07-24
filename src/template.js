@@ -125,6 +125,7 @@ export function adSlot(label) {
       site.adsenseSlot
     )}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
   }
+  if (!site.showAdPlaceholders) return ""; // clean site until ads are live
   return `<div class="ad-slot"><div class="ad-ph">Advertisement${
     label ? " · " + esc(label) : ""
   }</div></div>`;

@@ -29,6 +29,9 @@ export const site = {
   adsenseClient: "",
   // Optional: a specific ad slot ID for in-content units. Fill after approval.
   adsenseSlot: "",
+  // While ads aren't configured, show nothing where ads will go (clean site).
+  // Set to true only if you want to preview ad placement as dashed boxes.
+  showAdPlaceholders: false,
 
   // 2) AFFILIATE SPOTS
   //    Each calculator can show ONE tasteful "recommended" card. Fill these with
