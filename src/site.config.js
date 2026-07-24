@@ -10,6 +10,10 @@ export const site = {
   // Your live URL once deployed (no trailing slash). Used for canonical URLs,
   // sitemap, and social share tags. Change this AFTER you pick a domain.
   url: "https://figurewise.com",
+  // Sub-path the site is served under. Leave "" for a domain or Cloudflare/
+  // Netlify (served at root). The GitHub Pages workflow sets this automatically
+  // to "/figurewise" via the BASE_PATH env var — you don't need to touch it.
+  basePath: "",
   // Short blurb used on the homepage + meta descriptions.
   description:
     "Free, fast, no-signup calculators for mortgages, loans, savings, debt payoff, retirement and more. Clear answers with the math shown.",

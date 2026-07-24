@@ -1,0 +1,65 @@
+# Automatically builds the site and publishes it to GitHub Pages on every push
+# to main. No external accounts, no manual steps after the one-time enable.
+#
+# One-time setup (≈1 min): on GitHub, open the repo → Settings → Pages →
+#   "Build and deployment" → Source: "GitHub Actions".
+# (This workflow also tries to enable it for you automatically.)
+#
+# Your live URL will be: https://mfmikey.github.io/figurewise/
+#
+# Using a custom domain later? Set BASE_PATH to "" and SITE_URL to your domain
+# below, add the domain under Settings → Pages, and re-push.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build site
+        run: node build.js
+        env:
+          SITE_URL: https://mfmikey.github.io
+          BASE_PATH: /figurewise
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

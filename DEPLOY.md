@@ -1,7 +1,13 @@
 # 🚀 Get FigureWise live (for free)
 
 Your site is 100% static HTML/CSS/JS in the **`dist/`** folder. That means you can host it
-**free, forever**, on several services. Pick ONE path below.
+**free, forever**, on several services.
+
+> **✅ Already set up for you: automatic deploys.** The repo at
+> **github.com/MFMIKEY/figurewise** includes a GitHub Actions workflow that rebuilds and
+> publishes the site on **every push** — no external account needed. Jump to **Option A**
+> to switch it on (one click). Options B/C are alternatives if you'd rather use
+> Cloudflare/Netlify.
 
 First, always rebuild so `dist/` is fresh:
 
@@ -11,7 +17,26 @@ npm run build
 
 ---
 
-## Option A — Netlify Drop (easiest, no account setup, ~2 minutes)
+## Option A — GitHub Pages, automatic (recommended, no other account)
+
+The workflow is already in the repo (`.github/workflows/deploy.yml`). You just flip it on:
+
+1. On GitHub, open your repo → **Settings** → **Pages**.
+2. Under **Build and deployment → Source**, choose **GitHub Actions**.
+3. That's it. The workflow runs on every push and publishes to:
+   **https://mfmikey.github.io/figurewise/**
+
+The first deploy kicks off automatically once the source is set (or push any change /
+click **Actions → Deploy to GitHub Pages → Run workflow**). Every future change I make and
+push goes live on its own in ~1 minute.
+
+> **Custom domain later?** Open `.github/workflows/deploy.yml`, set `BASE_PATH:` to `""`
+> and `SITE_URL:` to your domain; add the domain under Settings → Pages; push. (The site
+> is built to work at either a sub-path or a root domain — no other changes needed.)
+
+---
+
+## Option B — Netlify Drop (no repo needed, ~2 minutes)
 
 Best if you just want it online *right now*.
 
@@ -24,7 +49,7 @@ Downside: to update it, you drag the folder again. Fine for starting out.
 
 ---
 
-## Option B — Cloudflare Pages via GitHub (best for the long run, auto-updates)
+## Option C — Cloudflare Pages via GitHub (alternative auto-deploy)
 
 Best "set it and forget it": every time you change the site, it redeploys itself. Free,
 fast, and includes free HTTPS + a global CDN.

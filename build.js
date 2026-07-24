@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { site, categories } from "./src/site.config.js";
 import {
   setCalcs,
+  setBasePath,
   renderHome,
   renderCalculatorPage,
   renderContentPage,
@@ -20,6 +21,12 @@ const DIST = path.join(__dirname, "dist");
 const CALC_DIR = path.join(__dirname, "src", "calculators");
 const ASSET_DIR = path.join(__dirname, "assets");
 const TODAY = new Date().toISOString().slice(0, 10);
+
+// Env overrides let CI (e.g. GitHub Pages) build for a sub-path + real URL
+// without editing committed config. Local/Cloudflare builds use the defaults.
+if (process.env.SITE_URL) site.url = process.env.SITE_URL.replace(/\/$/, "");
+const BASE = (process.env.BASE_PATH || site.basePath || "").replace(/\/$/, "");
+setBasePath(BASE);
 
 // ---- helpers ---------------------------------------------------------------
 function writePage(urlPath, html) {
@@ -67,7 +74,7 @@ function sitemap(urls) {
   const body = urls
     .map(
       (u) =>
-        `  <url><loc>${site.url}${u === "/" ? "/" : u}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>${
+        `  <url><loc>${site.url}${BASE}${u === "/" ? "/" : u}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>${
           u === "/" ? "1.0" : "0.8"
         }</priority></url>`
     )
@@ -76,7 +83,7 @@ function sitemap(urls) {
 }
 
 function robots() {
-  return `User-agent: *\nAllow: /\n\nSitemap: ${site.url}/sitemap.xml\n`;
+  return `User-agent: *\nAllow: /\n\nSitemap: ${site.url}${BASE}/sitemap.xml\n`;
 }
 
 // ---- run -------------------------------------------------------------------

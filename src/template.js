@@ -21,9 +21,18 @@ export function setCalcs(list) {
   CALCS = list || [];
 }
 
+// Base path prefix for all internal links + assets. Empty "" = served at site
+// root (local preview, Cloudflare/Netlify, custom domain). Set to "/figurewise"
+// (etc.) only when hosting under a sub-path, e.g. GitHub Project Pages. build.js
+// sets this from the BASE_PATH env var or site.config.basePath.
+let BASE = "";
+export function setBasePath(b) {
+  BASE = (b || "").replace(/\/$/, "");
+}
+
 // ---- shared partials -------------------------------------------------------
 function head({ title, description, path, jsonld }) {
-  const canonical = site.url + path;
+  const canonical = site.url + BASE + path;
   const ga = site.ga4
     ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(site.ga4)}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${esc(site.ga4)}');</script>`
@@ -52,8 +61,8 @@ function head({ title, description, path, jsonld }) {
 <meta property="og:url" content="${esc(canonical)}">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#1f8f5f">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="${BASE}/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="${BASE}/assets/style.css">
 ${adsense}
 ${ga}
 ${ld}
@@ -67,11 +76,11 @@ function logoSvg() {
 function header() {
   return `<a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><nav class="nav">
-<a class="brand" href="/">${logoSvg()}<span>${esc(site.name)}</span></a>
+<a class="brand" href="${BASE}/">${logoSvg()}<span>${esc(site.name)}</span></a>
 <div class="nav-links">
-<a href="/#calculators">Calculators</a>
-<a href="/about/">About</a>
-<a href="/contact/">Contact</a>
+<a href="${BASE}/#calculators">Calculators</a>
+<a href="${BASE}/about/">About</a>
+<a href="${BASE}/contact/">Contact</a>
 </div></nav></header>`;
 }
 
@@ -79,7 +88,7 @@ function footer() {
   const links = Object.keys(categories)
     .map((key) => {
       const items = CALCS.filter((c) => c.category === key)
-        .map((c) => `<a href="/calculators/${c.slug}/">${esc(c.cardTitle || c.h1)}</a>`)
+        .map((c) => `<a href="${BASE}/calculators/${c.slug}/">${esc(c.cardTitle || c.h1)}</a>`)
         .join("");
       if (!items) return "";
       return `<div><h4>${esc(categories[key].label)}</h4>${items}</div>`;
@@ -88,15 +97,15 @@ function footer() {
   return `<footer class="site-footer">
 <div class="footer-inner">
 <div>
-<a class="brand" href="/">${logoSvg()}<span>${esc(site.name)}</span></a>
+<a class="brand" href="${BASE}/">${logoSvg()}<span>${esc(site.name)}</span></a>
 <p style="margin-top:12px;font-size:.9rem;color:var(--text-mute)">${esc(site.tagline)}</p>
 </div>
 ${links}
 <div><h4>Site</h4>
-<a href="/about/">About</a>
-<a href="/contact/">Contact</a>
-<a href="/privacy/">Privacy Policy</a>
-<a href="/disclaimer/">Disclaimer</a>
+<a href="${BASE}/about/">About</a>
+<a href="${BASE}/contact/">Contact</a>
+<a href="${BASE}/privacy/">Privacy Policy</a>
+<a href="${BASE}/disclaimer/">Disclaimer</a>
 </div>
 </div>
 <div class="footer-bottom">
@@ -169,15 +178,15 @@ export function renderCalculatorPage(calc) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: site.url + "/" },
-      { "@type": "ListItem", position: 2, name: calc.h1, item: site.url + path },
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url + BASE + "/" },
+      { "@type": "ListItem", position: 2, name: calc.h1, item: site.url + BASE + path },
     ],
   });
   jsonld.push({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: calc.h1,
-    url: site.url + path,
+    url: site.url + BASE + path,
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -253,7 +262,7 @@ export function renderCalculatorPage(calc) {
   const related =
     calc.related && calc.related.length
       ? `<h2>Related calculators</h2><div class="related-list">${calc.related
-          .map((r) => `<a href="/calculators/${r.slug}/">${esc(r.label)}</a>`)
+          .map((r) => `<a href="${BASE}/calculators/${r.slug}/">${esc(r.label)}</a>`)
           .join("")}</div>`
       : "";
 
@@ -269,11 +278,11 @@ export function renderCalculatorPage(calc) {
   };
   const inlineScript = `<script>window.__CALC__=${JSON.stringify(spec)};
 window.__compute=${calc.compute.toString()};</script>
-<script src="/assets/calc.js" defer></script>`;
+<script src="${BASE}/assets/calc.js" defer></script>`;
 
   const main = `
 <div class="container narrow">
-<nav class="breadcrumb"><a href="/">Home</a> › ${esc(calc.h1)}</nav>
+<nav class="breadcrumb"><a href="${BASE}/">Home</a> › ${esc(calc.h1)}</nav>
 <h1>${esc(calc.h1)}</h1>
 <p class="sub" style="color:var(--text-soft);font-size:1.08rem;margin-top:-.3em">${esc(calc.intro)}</p>
 </div>
@@ -347,13 +356,13 @@ export function renderContentPage({ slug, title, metaTitle, description, bodyHtm
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: site.url + "/" },
-        { "@type": "ListItem", position: 2, name: title, item: site.url + p },
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url + BASE + "/" },
+        { "@type": "ListItem", position: 2, name: title, item: site.url + BASE + p },
       ],
     },
   ];
   const main = `<div class="container narrow">
-<nav class="breadcrumb"><a href="/">Home</a> › ${esc(title)}</nav>
+<nav class="breadcrumb"><a href="${BASE}/">Home</a> › ${esc(title)}</nav>
 <h1>${esc(title)}</h1>
 <div class="prose">${bodyHtml}</div>
 </div>`;
@@ -378,7 +387,7 @@ export function renderHome(calcs) {
       const cards = list
         .map(
           (c) =>
-            `<a class="card" href="/calculators/${c.slug}/"><span class="card-ico">${
+            `<a class="card" href="${BASE}/calculators/${c.slug}/"><span class="card-ico">${
               c.icon || "🧮"
             }</span><h3>${esc(c.cardTitle || c.h1)}</h3><p>${esc(c.cardBlurb || calcShort(c))}</p></a>`
         )
@@ -392,7 +401,7 @@ export function renderHome(calcs) {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: site.name,
-      url: site.url + "/",
+      url: site.url + BASE + "/",
       description: site.description,
     },
     {
@@ -402,7 +411,7 @@ export function renderHome(calcs) {
         "@type": "ListItem",
         position: i + 1,
         name: c.h1,
-        url: site.url + `/calculators/${c.slug}/`,
+        url: site.url + BASE + `/calculators/${c.slug}/`,
       })),
     },
   ];
